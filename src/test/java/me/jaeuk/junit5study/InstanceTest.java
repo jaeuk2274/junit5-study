@@ -36,6 +36,7 @@ class InstanceTest {
 
     int value = 1;
 
+    @Disabled
     @DisplayName("반복하는 테스트")
     @RepeatedTest(5)
     void createStudy(){
