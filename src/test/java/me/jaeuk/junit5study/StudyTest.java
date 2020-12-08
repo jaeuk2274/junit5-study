@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 class StudyTest {
 
+
+
     @DisplayName("반복하는 테스트")
     @RepeatedTest(value = 10, name = "{displayName}, {currentRepetition}/{totalRepetitions}")
     void repeatTest(RepetitionInfo repetitionInfo){
@@ -75,8 +77,6 @@ class StudyTest {
             return new Study(accessor.getInteger(0), accessor.getString(1));
         }
     }
-
-
 
 
     @FastTest
