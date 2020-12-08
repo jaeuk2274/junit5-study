@@ -43,14 +43,16 @@ class InstanceTest {
     }
 
     @BeforeAll
-    // 테스트 클래스 안에 있는 여러 테스트가 모두 실행될때 모든 테스트가 실행되기 전에 딱 1번 호출/반드시 static 메서드 사용해야 한다
-    static void beforeAll(){
+    // @TestInstance(TestInstance.Lifecycle.PER_CLASS) 에서는
+    // static 빼도 됨
+    void beforeAll(){
         System.out.println("beforeAll");
     }
 
     @AfterAll
-    // 테스트 클래스 안에 있는 여러 테스트가 모두 실행될때 모든 테스트가 실행된 후 딱 1번 호출"
-    static void afterAll(){
+    // @TestInstance(TestInstance.Lifecycle.PER_CLASS) 에서는
+    // static 빼도 됨
+    void afterAll(){
         System.out.println("afterAll");
     }
 
