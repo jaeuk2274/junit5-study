@@ -2,6 +2,14 @@ package me.jaeuk.junit5study;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ArgumentConversionException;
+import org.junit.jupiter.params.converter.ConvertWith;
+import org.junit.jupiter.params.converter.SimpleArgumentConverter;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.Duration;
 import java.util.function.Supplier;
@@ -12,6 +20,41 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 class StudyTest {
+
+    @DisplayName("반복하는 테스트")
+    @RepeatedTest(value = 10, name = "{displayName}, {currentRepetition}/{totalRepetitions}")
+    void repeatTest(RepetitionInfo repetitionInfo){
+        System.out.println("test " + repetitionInfo.getCurrentRepetition() + " / "
+                + repetitionInfo.getTotalRepetitions());
+    }
+
+    @DisplayName("파라미터 테스트")
+    @ParameterizedTest(name = "{index} {displayName} msg={0}")
+    @ValueSource(strings = {"첫번째", "두번째", "세번째"})
+    //@EmptySource // 비어있는 문자열 넣어준다
+    //@NullSource // null 넣어주고
+    @NullAndEmptySource // 둘다 넣어준다
+    void parameterizedTest(String msg){
+        System.out.println(msg);
+    }
+
+
+    @DisplayName("인자 값 타입 변환 / 암시적 규칙 있으나 직접 구현 가능")
+    @ParameterizedTest(name = "{index} {displayName} msg={0}")
+    @ValueSource(ints = {10,20,40})
+    void typeChange(@ConvertWith(StudyConverter.class) Study study){
+        System.out.println(study.getLimit());
+    }
+    static class StudyConverter extends SimpleArgumentConverter {
+        @Override
+        protected Object convert(Object source, Class<?> targetType) throws ArgumentConversionException {
+            assertEquals(Study.class, targetType, "Can only convert to Study");
+            return new Study(Integer.parseInt(source.toString()));
+        }
+    }
+
+
+
 
     @FastTest
     @DisplayName("환경변수, 시스템 변수 등 특정값 일때 실행 등")
