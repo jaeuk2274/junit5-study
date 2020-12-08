@@ -13,9 +13,9 @@ import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 class StudyTest {
 
-    @Test
+    @FastTest
     @DisplayName("환경변수, 시스템 변수 등 특정값 일때 실행 등")
-     @EnabledOnOs({OS.MAC, OS.WINDOWS}) // 맥, 윈도우에서만 실행
+    @EnabledOnOs({OS.MAC, OS.WINDOWS}) // 맥, 윈도우에서만 실행
     // @DisabledOnOs({OS.MAC}) // 맥에서만 미실행
     // @EnabledOnJre({JRE.JAVA_8}) // java8 에서만 실행
     void create_new_study(){
