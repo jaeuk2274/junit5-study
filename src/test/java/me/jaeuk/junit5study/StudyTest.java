@@ -1,14 +1,40 @@
 package me.jaeuk.junit5study;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.*;
 
 import java.time.Duration;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 class StudyTest {
+
+    @Test
+    @DisplayName("환경변수, 시스템 변수 등 특정값 일때 실행 등")
+     @EnabledOnOs({OS.MAC, OS.WINDOWS}) // 맥, 윈도우에서만 실행
+    // @DisabledOnOs({OS.MAC}) // 맥에서만 미실행
+    // @EnabledOnJre({JRE.JAVA_8}) // java8 에서만 실행
+    void create_new_study(){
+        // 환경변수, 시스템 변수에 따라 실행하거나 실행하지 않아야 한다면
+        String test_env = System.getenv("TEST_ENV");
+        System.out.println("test_env : " + test_env);
+
+        // assumeTrue("LOCAL".equalsIgnoreCase(test_env));
+
+        assumingThat("LOCAL".equalsIgnoreCase(test_env), () -> {
+            // local 이면 이게 작동
+        });
+        assumingThat("jaeuk".equalsIgnoreCase(test_env), () -> {
+            // jaeuk 이면 이게 작동
+        });
+        assumingThat(null == test_env, () -> {
+            System.out.println("test_env : " + test_env);
+        });
+    }
 
 
     @Test
