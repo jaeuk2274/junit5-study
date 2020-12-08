@@ -2,14 +2,16 @@ package me.jaeuk.junit5study;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.*;
+import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.AggregateWith;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.SimpleArgumentConverter;
-import org.junit.jupiter.params.provider.EmptySource;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.NullSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.*;
 
 import java.time.Duration;
 import java.util.function.Supplier;
@@ -50,6 +52,27 @@ class StudyTest {
         protected Object convert(Object source, Class<?> targetType) throws ArgumentConversionException {
             assertEquals(Study.class, targetType, "Can only convert to Study");
             return new Study(Integer.parseInt(source.toString()));
+        }
+    }
+
+    @DisplayName("다중 파라미터 테스트")
+    @ParameterizedTest(name = "{index} {displayName} msg={0}")
+    @CsvSource({"10, '자바 스터디'", "20, '스프링'"})
+    void ParameterizedTest2(Integer limit, String name){
+        Study study = new Study(limit, name);
+        System.out.println(study);
+    }
+
+    @DisplayName("Aggregator 테스트")
+    @ParameterizedTest(name = "{index} {displayName} msg={0}")
+    @CsvSource({"10, '자바 스터디'", "20, '스프링'"})
+    void AggregatorTest(@AggregateWith(StudyAggregator.class) Study study){
+        System.out.println(study);
+    }
+    static class StudyAggregator implements ArgumentsAggregator {
+        @Override
+        public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext parameterContext) throws ArgumentsAggregationException {
+            return new Study(accessor.getInteger(0), accessor.getString(1));
         }
     }
 
